@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f69888e427647f5baae1b1e8399cbbc, type: 3}
+  m_Name: KillEnemiesQuest
+  m_EditorClassIdentifier: 
+  _questType: 0
+  _questName: Clear Zombie Camp
+  _questContentDescription: Kill All Zombies!
+  _questSubtitles: 'OK! Clear out all zombie waves! '
+  _startQuestSoundEffect: {fileID: 8300000, guid: d154765cddb7ba84bbd7931f89317be9,
+    type: 3}
+  _questCompletedSoundEffect: {fileID: 8300000, guid: ea350ce441dad204bb8ee8cb16766eef,
+    type: 3}
+  _questIsCompleted: 1
+  _reward:
+  - _type: 0
+    _amount: 20
+  - _type: 1
+    _amount: 70
+  AudioSource: {fileID: 0}
+  _numberOfKillZombies: 3

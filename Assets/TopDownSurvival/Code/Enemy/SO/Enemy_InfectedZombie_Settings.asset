@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b113a0d591b4f6380ff55d167388528, type: 3}
+  m_Name: Enemy_InfectedZombie_Settings
+  m_EditorClassIdentifier: 
+  _zombieType: 0
+  _maxHealth: 70
+  _damageAmount: 15
+  _experience: 20
+  _dropList:
+  - {fileID: 11400000, guid: 99aec81f4ffd69945aaa2ff00e627a7f, type: 2}
+  - {fileID: 11400000, guid: b4536cf5b66e63e4187019fc8119db22, type: 2}
+  - {fileID: 11400000, guid: 74058671d72596c4d867f23e270d237e, type: 2}
+  _animatorControllers:
+  - {fileID: 9100000, guid: 41b56e717f991d74e9be1e723869e437, type: 2}
+  - {fileID: 9100000, guid: 32d6996db177be44ea752c49c7bb9d82, type: 2}
+  - {fileID: 9100000, guid: a2b1649fd55f0d3429203ef071a1c5a0, type: 2}
+  - {fileID: 9100000, guid: b996fd43565c98041b3e23ad9c34c4e7, type: 2}
+  - {fileID: 9100000, guid: bdadc493ffc582b44b2120111a65ecdd, type: 2}
+  _zombieChaseSoundEffect:
+  - {fileID: 8300000, guid: 4fc45c7a522c34457adcce185f1c9c62, type: 3}
+  - {fileID: 8300000, guid: d78664e7aba894ccbb73bd09001da8e9, type: 3}
+  - {fileID: 8300000, guid: 2400a9236fe984a13a77418432b7d875, type: 3}
+  - {fileID: 8300000, guid: 3bfda2ac553af4711ab66751b3c47077, type: 3}
+  - {fileID: 8300000, guid: dd54fca0dff4341a1a30742581e71ace, type: 3}
+  - {fileID: 8300000, guid: f5c7a5fe9faa4496e95b7c8f717f6058, type: 3}
+  - {fileID: 8300000, guid: 37f4d065593b14871a4979dbeff3ae8a, type: 3}
+  - {fileID: 8300000, guid: 04c61bb77bb024ec489879f6a314855e, type: 3}
+  - {fileID: 8300000, guid: bd2d30f334b72421ea41d23df4059a91, type: 3}
+  - {fileID: 8300000, guid: 6be5812aabc16422bb677fbd4718c1ab, type: 3}
+  _zombieAttackSoundEffect: []

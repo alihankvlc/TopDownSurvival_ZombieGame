@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2cad7d185874128b1288284e61b18d7, type: 3}
+  m_Name: ZombieDrop_Health
+  m_EditorClassIdentifier: 
+  Type: 0
+  DropObject: {fileID: 2922097540197846781, guid: 3c9e3060c455c2048b91120f9d1a8bde,
+    type: 3}
+  Rate: 70
+  DisappearDelay: 10
+  IncreaseAmount: 5
