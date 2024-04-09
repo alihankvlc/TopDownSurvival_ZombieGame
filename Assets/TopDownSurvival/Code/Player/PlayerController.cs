@@ -1,5 +1,7 @@
 using _Project.Common.Inventory;
 using Cinemachine;
+using DG.Tweening;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.AzureSky;
 using UnityEngine.Diagnostics;
 using Zenject;
@@ -19,27 +21,33 @@ namespace DeadNation
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerController : Singleton<PlayerController>, IDamageable
     {
-        [Header("Movement Settings")] [SerializeField] private float _moveSpeed = 3f;
+        [Header("Movement Settings")] [SerializeField]
+        private float _moveSpeed = 3f;
+
         [SerializeField] private float _animationDampTime;
         [SerializeField] private int _level;
 
         [SerializeField] private float _rotationSpeed = 10f;
 
 
-        [Space] [Header("Ground Settings")] [SerializeField] private LayerMask _groundLayerMask;
+        [Space] [Header("Ground Settings")] [SerializeField]
+        private LayerMask _groundLayerMask;
 
         [SerializeField] private float _groundRadius = 0.12f;
         [SerializeField] private float _groundOffset = 0.08f;
 
         [Header("Other")] [SerializeField] private LayerMask _rotationToLayerMask;
+        [SerializeField] private RigLayer _bodyRigLayer;
         [Inject] private IStatHandler _statHandler;
         [Inject] private InputHandler _input;
 
         private const float _gravity = -25f;
         private const float _threshold = 0.1f;
 
-        private readonly int HORIZONTAL_VELOCITY_ANIM_ID = Animator.StringToHash("HorizontalVelocity");
-        private readonly int VERTICAL_VELOCITY_ANIM_ID = Animator.StringToHash("VerticalVelocity");
+        private readonly int _hVelocityHashId = Animator.StringToHash("HorizontalVelocity");
+        private readonly int _vVelocityHashId = Animator.StringToHash("VerticalVelocity");
+        private readonly int _onMoveHashId = Animator.StringToHash("OnMove");
+        private readonly int _onFocusHashId = Animator.StringToHash("OnFocus");
 
         private bool _isGrounded;
         private bool _isAlive;
@@ -76,33 +84,54 @@ namespace DeadNation
         {
             if (ConsoleController.Instance.IsOpen || InventoryManager.Instance.InventoryEnable)
             {
-                _animator.SetFloat(HORIZONTAL_VELOCITY_ANIM_ID, 0, _animationDampTime, Time.deltaTime * 15f);
-                _animator.SetFloat(VERTICAL_VELOCITY_ANIM_ID, 0, _animationDampTime, Time.deltaTime * 15f);
+                _animator.SetFloat(_hVelocityHashId, 0, _animationDampTime, Time.deltaTime * 15f);
+                _animator.SetFloat(_vVelocityHashId, 0, _animationDampTime, Time.deltaTime * 15f);
+                _animator.SetBool(_onFocusHashId, false);
                 return;
             }
 
+
             PlayerMovement();
+            ChangeRigWeight(_input.Aim ? 1f : 0f, 0.1f);
+        }
+
+        void ChangeRigWeight(float targetWeight, float duration)
+        {
+            float startWeight = _bodyRigLayer.rig.weight;
+            DOTween.To(() => startWeight, x => startWeight = x, targetWeight, duration)
+                .SetEase(Ease.Linear)
+                .OnUpdate(() => { _bodyRigLayer.rig.weight = startWeight; });
         }
 
         #region Movement
 
         private void PlayerMovement()
         {
-            _moveDirection.x = _input.Move.x;
-            _moveDirection.z = _input.Move.y;
+            _moveDirection.x = _input.Move.y;
+            _moveDirection.z = -_input.Move.x;
 
             PlayerRotation();
 
 
-            _animator.SetFloat(HORIZONTAL_VELOCITY_ANIM_ID, _input.Move.x, _animationDampTime, Time.deltaTime * 15f);
-            _animator.SetFloat(VERTICAL_VELOCITY_ANIM_ID, _input.Move.y, _animationDampTime, Time.deltaTime * 15f);
+            _animator.SetFloat(_onMoveHashId, _characterController.velocity.magnitude > 0.1f ? 1f : 0f,
+                _animationDampTime, Time.deltaTime);
 
-            _characterController.Move(((transform.TransformDirection(_moveDirection) * _moveSpeed) + Gravity()) *
+            _animator.SetBool(_onFocusHashId, _input.Aim);
+
+            _characterController.Move(((_moveDirection * _moveSpeed) + Gravity()) *
                                       Time.deltaTime);
         }
 
         private void PlayerRotation()
         {
+            if (_input.Move != Vector2.zero && !_input.Aim)
+            {
+                Quaternion rotation = Quaternion.LookRotation(_moveDirection);
+                transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
+            }
+
+            if (!_input.Aim) return;
+
             Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
             RaycastHit hitInfo;
 
@@ -119,9 +148,14 @@ namespace DeadNation
                     hitInfo.point = transform.position - cursorToPlayer;
                 }
 
+
                 Vector3 targetPosition = new Vector3(hitInfo.point.x, transform.position.y, hitInfo.point.z);
                 Quaternion rotation = Quaternion.LookRotation(targetPosition - transform.position);
                 transform.rotation = Quaternion.Slerp(transform.rotation, rotation, _rotationSpeed * Time.deltaTime);
+
+                _animator.SetFloat(_hVelocityHashId, _input.Move.x, _animationDampTime,
+                    Time.deltaTime * 15f);
+                _animator.SetFloat(_vVelocityHashId, _input.Move.y, _animationDampTime, Time.deltaTime * 15f);
             }
         }
 

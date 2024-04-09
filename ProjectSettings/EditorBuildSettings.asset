@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Synty/InterfaceApocalypseHUD/Samples/Scene/EfkanScene.unity
-    guid: a8e69be7294614c1780f086b980f5d84
+    path: Assets/TopDownSurvival/Scenes/TopDownSurvival.unity
+    guid: 63e70057d6080974baf6f80f5cfe7412
   m_configObjects: {}

@@ -1,35 +1,41 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Common.ItemSystem;
+using Sirenix.OdinInspector;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Zenject;
 
 namespace DeadNation
 {
     public interface IWeaponHandler
     {
-        public GunSettings GetWeaponSettings(int id);
+        public Weapon GetWeaponSettings(int id, bool isEquip);
     }
 
     public class PlayerWeaponManager : Singleton<PlayerWeaponManager>, IWeaponHandler
     {
-        [SerializeField] private List<GunSettings> _weapons = new();
+        [SerializeField] private List<Weapon> _weapons = new();
 
-        private Dictionary<int, GunSettings> _weaponCache = new();
+        [Inject] private IEquippableWeapon _equippableWeaponHandler;
+        private Dictionary<int, Weapon> _weaponSettingsCache = new();
 
 
         private void Start()
         {
-            _weaponCache = _weapons.ToDictionary(r => r.Firearm.Id);
+            _weaponSettingsCache = _weapons.ToDictionary(r => r.Settings.Data.Id);
         }
 
-        public GunSettings GetWeaponSettings(int id)
+        public Weapon GetWeaponSettings(int id, bool isEquip)
         {
-            if (_weaponCache.TryGetValue(id, out GunSettings existingGunSettings))
+            if (_weaponSettingsCache.TryGetValue(id, out Weapon existingGunSettings))
             {
+                existingGunSettings.gameObject.SetActive(isEquip);
+                _equippableWeaponHandler.EquipWeapon(isEquip ? existingGunSettings : null);
                 return existingGunSettings;
             }
 
-            Debug.Log("Null...");
             return null;
         }
     }

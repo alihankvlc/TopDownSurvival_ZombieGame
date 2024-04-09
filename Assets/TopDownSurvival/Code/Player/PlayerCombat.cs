@@ -8,14 +8,19 @@ using DeadNation;
 using UnityEngine;
 using Zenject;
 
-public class PlayerCombat : Singleton<PlayerCombat>
+public interface IEquippableWeapon
 {
+    public void EquipWeapon(Weapon weapon);
+}
+
+public class PlayerCombat : Singleton<PlayerCombat>, IEquippableWeapon
+{
+    [SerializeField] private Weapon _equippedWeapon;
     [SerializeField] private Transform _cursor;
     [SerializeField] private GameObject _bulletPrefab;
-    [SerializeField] private Transform _weaponPlaceHolder;
     private CinemachineImpulseSource _cinemachineImpulse;
 
-    [SerializeField] private WeaponData _currentWeapon;
+    private Animator _animator;
     private Camera _mainCamera;
 
     private float _lastShootTime;
@@ -24,6 +29,7 @@ public class PlayerCombat : Singleton<PlayerCombat>
     [Inject] private InputHandler _input;
     [Inject] private IStatHandler _statHandler;
     [Inject] private IWeaponHandler _weaponHandler;
+
     private int _killCounter;
 
     public int KillCounter => _killCounter;
@@ -32,12 +38,14 @@ public class PlayerCombat : Singleton<PlayerCombat>
     {
         _mainCamera = Camera.main;
         _cinemachineImpulse = GetComponent<CinemachineImpulseSource>();
+        _animator = GetComponent<Animator>();
     }
 
     private void OnEnable()
     {
         EnemyController.OnEnemyKilledEvent += OnEnemyKilled;
     }
+
 
     private void OnEnemyKilled(int xp)
     {
@@ -51,33 +59,37 @@ public class PlayerCombat : Singleton<PlayerCombat>
         if (InventoryManager.Instance.InventoryEnable)
             return;
 
-
-        Attack();
-    }
-
-
-    private void Attack()
-    {
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
 
         if (Physics.Raycast(ray, out hitInfo))
         {
             _cursor.transform.position = hitInfo.point;
-            HandleGunAttack(hitInfo.point);
+            _cursor.gameObject.SetActive(_input.Aim);
+        }
+
+        if (_equippedWeapon != null)
+        {
+            if (_equippedWeapon.Settings is FirearmSettings existingFirearm)
+            {
+                HandleGunAttack(existingFirearm, hitInfo.point);
+            }
         }
     }
 
-
-    private void HandleGunAttack(Vector3 targetPosition)
+    public void EquipWeapon(Weapon weapon)
     {
-        GunSettings gunSettings = PlayerWeaponManager.Instance.GetWeaponSettings(25);
+        _equippedWeapon = weapon;
+        _animator.SetBool("OnEquip_Rifle", weapon != null);
+    }
 
-        if (Time.time - _lastShootTime >= 1.0f / gunSettings.Firearm.FireRate && _input.Attack)
+    private void HandleGunAttack(FirearmSettings firearmSettings, Vector3 targetPosition)
+    {
+        Firearm firearm = firearmSettings.Data as Firearm;
+        if (Time.time - _lastShootTime >= 1.0f / firearm.FireRate && _input.Attack && _input.Aim)
         {
             _lastShootTime = Time.time;
-            gunSettings.SetActiveSettings(true);
-            gunSettings.Shot(_bulletPrefab, targetPosition, gunSettings.Firearm.SoundEffect);
+            firearmSettings.Shot(_bulletPrefab, targetPosition, firearm.SoundEffect);
         }
     }
 

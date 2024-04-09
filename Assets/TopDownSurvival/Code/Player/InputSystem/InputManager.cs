@@ -10,6 +10,7 @@ namespace DeadNation
         public Vector2 Move { get; }
         public bool Attack { get; }
         public bool Inventory { get; }
+        public bool Aim { get; }
     }
 
     public class InputManager : Singleton<InputManager>, InputHandler
@@ -19,10 +20,12 @@ namespace DeadNation
         private InputActionMap _inputActionMap;
         private InputAction _moveInputAction;
         private InputAction _attackInputAction;
+        private InputAction _aimInputAction;
         private InputAction _inventoryInputAction;
 
         public Vector2 Move { get; private set; }
         public bool Attack { get; private set; }
+        public bool Aim { get; private set; }
         public bool Inventory { get; private set; }
 
         private void Awake()
@@ -32,6 +35,7 @@ namespace DeadNation
             _moveInputAction = _inputActionMap.FindAction("Move");
             _attackInputAction = _inputActionMap.FindAction("Attack");
             _inventoryInputAction = _inputActionMap.FindAction("Inventory");
+            _aimInputAction = _inputActionMap.FindAction("Aim");
         }
         private void OnEnable()
         {
@@ -44,6 +48,9 @@ namespace DeadNation
                 (InputAction.CallbackContext context) => Attack = context.ReadValueAsButton();
             _attackInputAction.canceled +=
                 (InputAction.CallbackContext context) => Attack = context.ReadValueAsButton();
+            
+            _aimInputAction.performed += (InputAction.CallbackContext context) => Aim = context.ReadValueAsButton();
+            _aimInputAction.canceled += (InputAction.CallbackContext context) => Aim = context.ReadValueAsButton();
         }
 
         private void Update()
@@ -62,6 +69,9 @@ namespace DeadNation
                 (InputAction.CallbackContext context) => Attack = context.ReadValueAsButton();
             _attackInputAction.canceled -=
                 (InputAction.CallbackContext context) => Attack = context.ReadValueAsButton();
+            
+            _aimInputAction.performed -= (InputAction.CallbackContext context) => Aim = context.ReadValueAsButton();
+            _aimInputAction.canceled -= (InputAction.CallbackContext context) => Aim = context.ReadValueAsButton();
         }
     }
 }

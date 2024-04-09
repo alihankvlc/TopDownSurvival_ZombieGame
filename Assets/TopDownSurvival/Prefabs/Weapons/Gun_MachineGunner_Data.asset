@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5c65c2be9cf68e042bc9e139d4bc07c0, type: 3}
-  m_Name: Gun_M4A1_Rifle_Data
+  m_Name: Gun_MachineGunner_Data
   m_EditorClassIdentifier: 
-  _itemId: 25
-  _itemWeight: 0
-  _itemName: M4A1
+  _itemId: 77
+  _itemWeight: 10
+  _itemName: Machine Gunner
   _itemDescription: Description
   _isStackable: 0
-  _itemIcon: {fileID: 21300000, guid: e713fa6769be8884781c361a06c7bc7c, type: 3}
+  _itemIcon: {fileID: 21300000, guid: 8a1d5c60915e682498ccc6618da10e7c, type: 3}
   _itemType: 0
-  _model: {fileID: 3829461639647823077, guid: c3127c7154fb4fd4988c4ac97759bd11, type: 3}
-  _soundEffect: {fileID: 8300000, guid: 1b145bcffd767854fb0c71c37678ebaa, type: 3}
-  _bullet: {fileID: 5963029909085459194, guid: 22c4abc795e0e5742927fc2a66eb0c14, type: 3}
+  _model: {fileID: 0}
+  _soundEffect: {fileID: 8300000, guid: f19e3fdb9c8082647a2c32beca28ba84, type: 3}
+  _bullet: {fileID: 0}
   _fireRate: 9
   _bulletForce: 1200

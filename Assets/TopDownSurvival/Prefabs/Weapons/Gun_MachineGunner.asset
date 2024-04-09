@@ -9,11 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: OdinModuleConfig
+  m_Script: {fileID: 11500000, guid: 7313fba27834cd84d8dbc8e2e8e611a5, type: 3}
+  m_Name: Gun_MachineGunner
   m_EditorClassIdentifier: 
-  configurations:
-  - ID: Unity.Mathematics
-    ActivationSettings: 0
-  ModuleTogglingSettings: 1
-  ModuleUpdateSettings: 1
+  _itemData: {fileID: 11400000, guid: 577de1f149cdf4d4283fe9d816a97529, type: 2}
+  _itemCount: 1

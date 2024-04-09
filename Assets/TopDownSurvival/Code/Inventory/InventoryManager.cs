@@ -27,6 +27,9 @@ namespace _Project.Common.Inventory
 
         [Inject] private IProviderInventory _inventoryProvider;
         [Inject] private InputHandler _inputHandler;
+        [Inject] private IWeaponHandler _weaponHandler;
+
+        [SerializeField] private WeaponData _equippedWeapon;
 
         private const int _toolBeltSlotSize = 5;
         private bool _isShowInventory;
@@ -45,13 +48,53 @@ namespace _Project.Common.Inventory
             }
 
             for (int i = 1; i <= _toolBeltSlotSize; i++)
-            {
                 if (Input.GetKeyDown((KeyCode)((int)KeyCode.Alpha1 + i - 1)))
                 {
-                    Item slotInItem = _slots[i - 1].SlotInItem;
-                    Debug.Log(slotInItem?.Data.Name);
+                    Item slotInItem = _slots[i - 1]?.SlotInItem;
+                    if (slotInItem != null)
+                    {
+                        if (slotInItem.Data is WeaponData existingData)
+                        {
+                            if (_equippedWeapon == null)
+                            {
+                                _equippedWeapon = existingData;
+                                _weaponHandler.GetWeaponSettings(_equippedWeapon.Id, true);
+                            }
+                            else
+                            {
+                                if (slotInItem.Data.Id != _equippedWeapon.Id)
+                                {
+                                    _weaponHandler.GetWeaponSettings(_equippedWeapon.Id, false);
+                                    
+                                    _equippedWeapon = existingData;
+                                    _weaponHandler.GetWeaponSettings(_equippedWeapon.Id, true);
+                                }
+                            }
+                        }
+                    }
+                    // if (slotInItem?.Data is WeaponData existingData && _equippedWeapon != existingData)
+                    // {
+                    //     _equippedWeapon = existingData;
+                    //     _weaponHandler.GetWeaponSettings(existingData.Id, true);
+                    // }
+                    //
+                    // if (_equippedWeapon != null)
+                    // {
+                    //     if (slotInItem == null)
+                    //     {
+                    //         _weaponHandler.GetWeaponSettings(_equippedWeapon.Id, false);
+                    //         _equippedWeapon = null;
+                    //     }
+                    //     else
+                    //     {
+                    //         if (slotInItem?.Data is WeaponData && _equippedWeapon != existingData)
+                    //         {
+                    //             Debug.Log("asdfasdfsdfasdf");
+                    //         }
+                    //     }
+                    // }
                 }
-            }
+
 
             if (_inputHandler.Inventory)
             {

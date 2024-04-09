@@ -1,4 +1,5 @@
 using System;
+using DeadNation;
 using UnityEngine;
 
 namespace _Project.Common.ItemSystem
@@ -9,9 +10,10 @@ namespace _Project.Common.ItemSystem
         [SerializeField] protected AudioClip _soundEffect;
         [SerializeField] protected GameObject _bullet;
 
-        public override ItemType ItemType { get; protected set; } = ItemType.Weapon;
-        public virtual WeaponType WeaponType { get; protected set; }
         public AudioClip SoundEffect => _soundEffect;
         public GameObject Bullet => _bullet;
+
+        public virtual WeaponType WeaponType { get; protected set; }
+        public override ItemType ItemType { get; protected set; } = ItemType.Weapon;
     }
 }
